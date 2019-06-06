@@ -51,6 +51,9 @@ public:
 //!	Output equation numbers
 	void OutputEquationNumber();
 
+//!	Output general ¦Á method parameter data
+	void OutputGeneralparaInfo();
+
 //!	Output element data
 	void OutputElementInfo();
 
@@ -64,7 +67,10 @@ public:
 	void OutputLoadInfo(); 
 
 //!	Output displacement data
-	void OutputNodalDisplacement(unsigned int lcase);
+	void OutputNodalDisplacement(unsigned int lcase, double time);
+
+//!	Output total number of steps
+	void OutputNsteps(unsigned int nsteps);
 
 //!	Output element stresses 
 	void OutputElementStress();
@@ -93,6 +99,12 @@ public:
 
 //!	Print banded and full stiffness matrix for debuging
 	void PrintStiffnessMatrix();
+
+//!	Print banded and full mass matrix for debuging
+	void PrintMassMatrix();
+
+//!	Print banded and full damping matrix for debuging
+	void PrintDampingMatrix();
 
 //!	Print address of diagonal elements for debuging
 	void PrintDiagonalAddress();

@@ -303,7 +303,7 @@ void CC3D20R::ElementStiffness(double* Matrix)
 				{
 					for (unsigned int J4 = 0; J4 < 6; J4++)
 					{
-						Matrix[J1*(J1 + 1) / 2 + J1 - J2] += B[J3][J2] * D[J3][J4] * B[J4][J1] * abs(JACOBI_DET) * GW[I];
+						Matrix[J1*(J1 + 1) / 2 + J1 - J2] += B[J3][J2] * D[J3][J4] * B[J4][J1] * JACOBI_DET * GW[I];
 					}
 				}
 			}
@@ -475,12 +475,8 @@ void CC3D20R::ElementMass(double* Matrix)
 		JACOBI_DET = JACOBI[0][0] * JACOBI[1][1] * JACOBI[2][2] + JACOBI[0][1] * JACOBI[1][2] * JACOBI[2][0]	// det(JACOBI)
 			+ JACOBI[0][2] * JACOBI[1][0] * JACOBI[2][1] - JACOBI[0][0] * JACOBI[1][2] * JACOBI[2][1]
 			- JACOBI[0][1] * JACOBI[1][0] * JACOBI[2][2] - JACOBI[0][2] * JACOBI[1][1] * JACOBI[2][0];
-        for (unsigned int J1 = 0; J1 < 60; J1++)		// element mass matrix
-        {
-              Matrix[J1*(J1 + 1) / 2] +=  DENSITY * abs(JACOBI_DET) *GW[I] / 20;
-		}
 
-/*		for (unsigned int J1 = 0; J1 < 60; J1++)		// element mass matrix
+		for (unsigned int J1 = 0; J1 < 60; J1++)		// element mass matrix
 		{
 			for (unsigned int J2 = 0; J2 < J1 + 1; J2++)
 			{
@@ -490,10 +486,10 @@ void CC3D20R::ElementMass(double* Matrix)
 						Matrix1[J1*(J1 + 1) / 2 + J1 - J2] += SHAPE[J3][J2] * SHAPE[J3][J1];
 
 				}
-				Matrix[J1*(J1 + 1) / 2 + J1 - J2] +=  DENSITY * Matrix1[J1*(J1 + 1) / 2 + J1 - J2] * abs(JACOBI_DET) *GW[I];
+				Matrix[J1*(J1 + 1) / 2 + J1 - J2] +=  DENSITY * Matrix1[J1*(J1 + 1) / 2 + J1 - J2] * JACOBI_DET*GW[I];
 				//cout<<Matrix1[J1*(J1 + 1) / 2 + J1 - J2];
 			}
-		}*/
+		}
 	}
 }
 //	Calculate element damping matrix 
@@ -519,11 +515,6 @@ void CC3D20R::ElementEffstiffness(double* Matrix, double* Matrix1, double* Matri
 	m1=Generalaparas->beta1*(1-Generalaparas->yita) * pow(Generalaparas->h,2);
 	m2=Generalaparas->game*(1-Generalaparas->delta) * Generalaparas->h;
 	m3=1-Generalaparas->alpha1;
-//**********************************************************
-/*	m1=1-Generalaparas->delta;
-	m2=m1*Generalaparas->game/Generalaparas->beta1/Generalaparas->h;
-	m3=(1-Generalaparas->alpha1)/Generalaparas->beta1/pow(Generalaparas->h,2);*/
-//**********************************************************
 	for (unsigned int J1=0; J1 < SizeOfDampingMatrix(); J1++)
 	{
 		Matrix[J1] = Matrix1[J1] * m1 + Matrix2[J1] * m2 + Matrix3[J1] * m3;

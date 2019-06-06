@@ -23,11 +23,16 @@ public:
 	unsigned int* node;		//!< Node number to which this load is applied
 	unsigned int* dof;		//!< Degree of freedom number for this load component
 	double* load;			//!< Magnitude of load
-
+	unsigned int ntimes;	//!< Number of concentrated loads in this load case
+	double* Time;			//!< Magnitude of load
+	double* Amplitude;			//!< Magnitude of load
 public:
 
 	CLoadCaseData() : nloads(0), node(NULL), dof(NULL), load(NULL) {};
 	~CLoadCaseData();
+
+//!	Set nloads, and new array node, dof and load for general ¦Á method
+	void Allocate(unsigned int num, unsigned int num2);
 
 //!	Set nloads, and new array node, dof and load
 	void Allocate(unsigned int num);

@@ -122,14 +122,6 @@ void CLDLTSolver::BackSubstitutionGE(double* Force, CGeneralapara* Generalaparas
 	m13=1/(Generalaparas->beta1 * pow(Generalaparas->h,2));
 	m14=-1/(Generalaparas->beta1 * Generalaparas->h);
 	m15=-Generalaparas->yipusi/Generalaparas->beta1;
-//***************************************
-/*	m13=1/Generalaparas->beta1/pow(Generalaparas->h,2);
-	m14=-1/Generalaparas->beta1/Generalaparas->h;
-	m15=-(1/2/Generalaparas->beta1-1);
-	m10=Generalaparas->game/Generalaparas->beta1/pow(Generalaparas->h,2);
-	m11=1-Generalaparas->game/Generalaparas->beta1;
-	m12=(1-Generalaparas->game/2/Generalaparas->beta1)*Generalaparas->h;*/
-//***************************************
 	double* Force1;
 	Force1 = new double[N];
 	for (unsigned int i = 0; i < N; i++)

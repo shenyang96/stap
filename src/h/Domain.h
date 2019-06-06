@@ -16,6 +16,7 @@
 #include "Solver.h"
 #include "LoadCaseData.h"
 #include "SkylineMatrix.h"
+#include "Generalapara.h"
 
 using namespace std;
 
@@ -58,8 +59,18 @@ private:
 //!	Number of load cases
 	unsigned int NLCASE;
 
+//!	total solution time
+	double totaltime;
+
+//!	time interval
+	double h;
+
 //!	List of all load cases
 	CLoadCaseData* LoadCases;
+
+
+//!	List of all general ¦Á method parameters
+	CGeneralapara* Generalaparas;
 
 //!	Number of concentrated loads applied in each load case
 	unsigned int* NLOAD;
@@ -71,6 +82,21 @@ private:
 /*! A one-dimensional array storing only the elements below the	skyline of the 
     global stiffness matrix. */
     CSkylineMatrix<double>* StiffnessMatrix;
+
+//!	Banded mass matrix
+/*! A one-dimensional array storing only the elements below the	skyline of the 
+    global mass matrix. */
+    CSkylineMatrix<double>* MassMatrix;
+
+//!	Banded stiffness matrix
+/*! A one-dimensional array storing only the elements below the	skyline of the 
+    global damping matrix. */
+    CSkylineMatrix<double>* DampingMatrix;
+
+//!	Banded stiffness matrix
+/*! A one-dimensional array storing only the elements below the	skyline of the 
+    global effectivestiffness matrix. */
+    CSkylineMatrix<double>* EffStiffnessMatrix;
 
 //!	Global nodal force/displacement vector
 	double* Force;
@@ -92,6 +118,9 @@ public:
 //!	Read nodal point data
 	bool ReadNodalPoints();
 
+//!	Read general ¦Á method parameter data
+	bool ReadGeneralaparameters();
+
 //!	Read load case data
 	bool ReadLoadCases();
 
@@ -109,11 +138,25 @@ public:
     calculate the column heights and address of diagonal elements */
 	void AllocateMatrices();
 
+    void AllocateMatricesGE();
+
 //!	Assemble the banded gloabl stiffness matrix
 	void AssembleStiffnessMatrix();
 
+//!	Assemble the banded gloabl mass matrix
+	void AssembleMassMatrix();
+
+//!	Assemble the banded gloabl damping matrix
+	void AssembleDampingMatrix();
+
+//!	Assemble the banded gloabl effiectivestiffness matrix
+	void AssembleEffStiffnessMatrix();
+
 //!	Assemble the global nodal force vector for load case LoadCase
 	bool AssembleForce(unsigned int LoadCase); 
+
+//!	Assemble the global nodal force vector for load case LoadCase
+	bool AssembleForceGE(unsigned int LoadCase, double ti); 
 
 //!	Return solution mode
 	inline unsigned int GetMODEX() { return MODEX; }
@@ -145,13 +188,27 @@ public:
 //!	Return the total number of load cases
 	inline unsigned int GetNLCASE() { return NLCASE; }
 
+//!	Return the total solution time
+	double Gettotaltime() { return totaltime; }
+
+//!	Return the time interval
+	inline double Geth() { return h; }
+
 //!	Return the number of concentrated loads applied in each load case
 	inline unsigned int* GetNLOAD() { return NLOAD; }
 
 //!	Return the list of load cases
 	inline CLoadCaseData* GetLoadCases() { return LoadCases; }
 
+//!	Return the list of general ¦Á parameters
+	inline CGeneralapara* GetGeneralapara() { return Generalaparas; }
+//!	Return pointer to the banded mass matrix
+	inline CSkylineMatrix<double>* GetMassMatrix() { return MassMatrix; }
 //!	Return pointer to the banded stiffness matrix
-	inline CSkylineMatrix<double>* GetStiffnessMatrix() { return StiffnessMatrix; }
+    inline CSkylineMatrix<double>* GetStiffnessMatrix() { return StiffnessMatrix; }
+//!	Return pointer to the banded damping matrix
+	inline CSkylineMatrix<double>* GetDampingMatrix() { return DampingMatrix; }
+//!	Return pointer to the banded effitivestiffness matrix
+	inline CSkylineMatrix<double>* GetEffStiffnessMatrix() { return EffStiffnessMatrix; }
 
 };

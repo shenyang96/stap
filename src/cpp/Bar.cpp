@@ -9,6 +9,7 @@
 /*****************************************************************************/
 
 #include "Bar.h"
+#include "Generalapara.h"
 
 #include <iostream>
 #include <iomanip>
@@ -160,4 +161,30 @@ void CBar::ElementStress(double* stress, double* Displacement)
 		if (LocationMatrix_[i])
 			*stress += S[i] * Displacement[LocationMatrix_[i]-1];
 	}
+}
+//	Calculate element mass matrix
+void CBar::ElementMass(double* Matrix)
+{
+}
+
+//	Calculate element damping matrix
+void CBar::ElementDamping(double* Matrix, double* Matrix1, double* Matrix2)
+{
+
+}
+
+//	Calculate element effectivestiffness matrix
+void CBar::ElementEffstiffness(double* Matrix, double* Matrix1, double* Matrix2, double* Matrix3, CGeneralapara* Generalaparas)
+{
+
+}
+//	Return the size of the element mass matrix (stored as an array column by column)
+unsigned int CBar::SizeOfMassMatrix()
+{
+	return 0;
+}
+//	Return the size of the element damping matrix (stored as an array column by column)
+unsigned int CBar::SizeOfDampingMatrix()
+{
+	return 0;
 }

@@ -54,7 +54,7 @@ bool C3D20RMaterial::Read(ifstream& Input, unsigned int mset)
 		return false;
 	}
 
-	Input >> E >> nu;	// Young's modulus and Possion's ratio
+	Input >> E >> nu >> den >> alpha >> beta;	// Young's modulus and Possion's ratio
 
 	return true;
 }

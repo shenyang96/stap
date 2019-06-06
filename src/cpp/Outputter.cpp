@@ -254,6 +254,23 @@ void COutputter::PrintC3D20RElementData(unsigned int EleGrp)
 	*this << endl;
 }
 
+// Print general ¦Á method parameter data
+void COutputter::OutputGeneralparaInfo()
+{
+	CDomain* FEMData = CDomain::Instance();
+
+	CGeneralapara* GeneralaparaData = FEMData->GetGeneralapara();
+
+		*this << setiosflags(ios::scientific);
+		*this << " G E N E R A L   ¦Á   M E T H O D   P A R A M E T E R   D A T A" << endl
+			  << endl;
+
+		*this << "    ¦Á       ¦Ä      ¦Ç      ¦Å      ¦Â      ¦Ì      ¦Ã      Time step      Total time" << endl;
+
+		GeneralaparaData->Write(*this);
+
+		*this << endl;
+}
 //	Print load data
 void COutputter::OutputLoadInfo()
 {
@@ -279,14 +296,21 @@ void COutputter::OutputLoadInfo()
 	}
 }
 
+void COutputter::OutputNsteps(unsigned int nsteps)
+{
+	*this << "NSTEPS" << setw(8) << nsteps << endl
+		  << endl
+		  << endl;
+}
+
 //	Print nodal displacement
-void COutputter::OutputNodalDisplacement(unsigned int lcase)
+void COutputter::OutputNodalDisplacement(unsigned int lcase, double time)
 {
 	CDomain* FEMData = CDomain::Instance();
 	CNode* NodeList = FEMData->GetNodeList();
 	double* Displacement = FEMData->GetDisplacement();
 
-	*this << " LOAD CASE" << setw(5) << lcase + 1 << endl
+	*this << " LOAD CASE" << setw(5) << lcase + 1 << setw(5) << "TIME" << setw(21) << time << endl
 		  << endl
 		  << endl;
 
@@ -414,11 +438,11 @@ void COutputter::OutputTotalSystemData()
 
 	*this << "     NUMBER OF EQUATIONS . . . . . . . . . . . . . .(NEQ) = " << FEMData->GetNEQ()
 		  << endl
-		  << "     NUMBER OF MATRIX ELEMENTS . . . . . . . . . . .(NWK) = " << FEMData->GetStiffnessMatrix()->size()
+		  << "     NUMBER OF MATRIX ELEMENTS . . . . . . . . . . .(NWK) = " << FEMData->GetEffStiffnessMatrix()->size()
 		  << endl
-		  << "     MAXIMUM HALF BANDWIDTH  . . . . . . . . . . . .(MK ) = " << FEMData->GetStiffnessMatrix()->GetMaximumHalfBandwidth()
+		  << "     MAXIMUM HALF BANDWIDTH  . . . . . . . . . . . .(MK ) = " << FEMData->GetEffStiffnessMatrix()->GetMaximumHalfBandwidth()
 		  << endl
-		  << "     MEAN HALF BANDWIDTH . . . . . . . . . . . . . .(MM ) = " << FEMData->GetStiffnessMatrix()->size() / FEMData->GetNEQ() << endl
+		  << "     MEAN HALF BANDWIDTH . . . . . . . . . . . . . .(MM ) = " << FEMData->GetEffStiffnessMatrix()->size() / FEMData->GetNEQ() << endl
 		  << endl
 		  << endl;
 }
@@ -433,8 +457,8 @@ void COutputter::PrintColumnHeights()
 	CDomain* FEMData = CDomain::Instance();
 
 	unsigned int NEQ = FEMData->GetNEQ();
-	CSkylineMatrix<double> *StiffnessMatrix = FEMData->GetStiffnessMatrix();
-	unsigned int* ColumnHeights = StiffnessMatrix->GetColumnHeights();
+	CSkylineMatrix<double> *MassMatrix = FEMData->GetMassMatrix();
+	unsigned int* ColumnHeights = MassMatrix->GetColumnHeights();
 
 	for (unsigned int col = 0; col < NEQ; col++)
 	{
@@ -458,8 +482,8 @@ void COutputter::PrintDiagonalAddress()
 	CDomain* FEMData = CDomain::Instance();
 
 	unsigned int NEQ = FEMData->GetNEQ();
-	CSkylineMatrix<double> *StiffnessMatrix = FEMData->GetStiffnessMatrix();
-	unsigned int* DiagonalAddress = StiffnessMatrix->GetDiagonalAddress();
+	CSkylineMatrix<double> *MassMatrix = FEMData->GetMassMatrix();
+	unsigned int* DiagonalAddress = MassMatrix->GetDiagonalAddress();
 
 	for (unsigned int col = 0; col <= NEQ; col++)
 	{
@@ -515,6 +539,104 @@ void COutputter::PrintStiffnessMatrix()
 			else
 			{
 				*this << setw(14) << (*StiffnessMatrix)(I, J);
+			}
+		}
+
+		*this << endl;
+	}
+
+	*this << endl;
+}
+
+//	Print banded and full stiffness matrix for debuging
+void COutputter::PrintMassMatrix()
+{
+	*this << "*** _Debug_ *** Banded mass matrix" << endl;
+
+	CDomain* FEMData = CDomain::Instance();
+
+	unsigned int NEQ = FEMData->GetNEQ();
+	CSkylineMatrix<double> *MassMatrix = FEMData->GetMassMatrix();
+	unsigned int* DiagonalAddress = MassMatrix->GetDiagonalAddress();
+
+	*this << setiosflags(ios::scientific) << setprecision(5);
+
+	for (unsigned int i = 0; i < DiagonalAddress[NEQ] - DiagonalAddress[0]; i++)
+	{
+		*this << setw(14) << (*MassMatrix)(i);
+
+		if ((i + 1) % 6 == 0)
+		{
+			*this << endl;
+		}
+	}
+
+	*this << endl
+		  << endl;
+
+	*this << "*** _Debug_ *** Full mass matrix" << endl;
+
+	for (int I = 1; I <= NEQ; I++)
+	{
+		for (int J = 1; J <= NEQ; J++)
+		{
+			int H = DiagonalAddress[J] - DiagonalAddress[J - 1];
+			if (J - I - H >= 0)
+			{
+				*this << setw(14) << 0.0;
+			}
+			else
+			{
+				*this << setw(14) << (*MassMatrix)(I, J);
+			}
+		}
+
+		*this << endl;
+	}
+
+	*this << endl;
+}
+
+//	Print banded and full Damping matrix for debuging
+void COutputter::PrintDampingMatrix()
+{
+	*this << "*** _Debug_ *** Banded stiffness matrix" << endl;
+
+	CDomain* FEMData = CDomain::Instance();
+
+	unsigned int NEQ = FEMData->GetNEQ();
+	CSkylineMatrix<double> *DampingMatrix = FEMData->GetDampingMatrix();
+	unsigned int* DiagonalAddress = DampingMatrix->GetDiagonalAddress();
+
+	*this << setiosflags(ios::scientific) << setprecision(5);
+
+	for (unsigned int i = 0; i < DiagonalAddress[NEQ] - DiagonalAddress[0]; i++)
+	{
+		*this << setw(14) << (*DampingMatrix)(i);
+
+		if ((i + 1) % 6 == 0)
+		{
+			*this << endl;
+		}
+	}
+
+	*this << endl
+		  << endl;
+
+	*this << "*** _Debug_ *** Full damping matrix" << endl;
+
+	for (int I = 1; I <= NEQ; I++)
+	{
+		for (int J = 1; J <= NEQ; J++)
+		{
+			int H = DiagonalAddress[J] - DiagonalAddress[J - 1];
+			if (J - I - H >= 0)
+			{
+				*this << setw(14) << 0.0;
+			}
+			else
+			{
+				*this << setw(14) << (*DampingMatrix)(I, J);
 			}
 		}
 

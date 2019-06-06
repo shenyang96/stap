@@ -401,20 +401,16 @@ bool CDomain::AssembleForceGE(unsigned int LoadCase, double ti)
             Force[NEQ + dof - 1] += Amplitudeinti * LoadData->load[lnum];
 	}
 //	CGeneralapara* generalapara_ = Generalaparas_;	// Pointer to parameter of the general ¦Á method
-	double m1,m2,m3,m4,m5,m6,m7,m8,m9,ck;
+	double m1,m2,m3,m4,m5,m6,m7,m8,m9;
 	m1=Generalaparas->beta1 * (1 - Generalaparas->yita) * pow(Generalaparas->h,2);
 	m2=Generalaparas->game * (1 - Generalaparas->delta) * Generalaparas->h;
 	m3=1 - Generalaparas->alpha1;
-	m4=Generalaparas->beta1 * Generalaparas->yita * pow(Generalaparas->h,2);
+	m4=Generalaparas->beta1 * Generalaparas->h * pow(Generalaparas->h,2);
 	m5=Generalaparas->h*m3;
 	m6=(Generalaparas->yipusi * m3 - Generalaparas->alpha1 * Generalaparas->beta1) * pow(Generalaparas->h,2);
 	m7=(Generalaparas->game * (1 - Generalaparas->delta) - Generalaparas->beta1) * pow(Generalaparas->h,2);
 	m8=(1-Generalaparas->delta) * (Generalaparas->yipusi * Generalaparas->game - Generalaparas->beta1 * Generalaparas->mu) * pow(Generalaparas->h,3);
 	m9=-Generalaparas->beta1 * Generalaparas->yita * pow(Generalaparas->h,2);
-//**************************************
-/*	m1=1;
-	m4=0;*/
-//**************************************
 	for (unsigned int fnum = 0; fnum < NEQ; fnum++)
 	{
 		Force[fnum] =m1 * Force[ fnum + NEQ] + m4 * Force[fnum + 2 * NEQ] ;
@@ -425,19 +421,13 @@ bool CDomain::AssembleForceGE(unsigned int LoadCase, double ti)
     unsigned int* ColumnHeights = K->GetColumnHeights();   // Column Hights
 	double* Force1;
 	Force1 = new double[NEQ];
-/*	for (unsigned int i = 0; i < NEQ; i++)
+	for (unsigned int i = 0; i < NEQ; i++)
 	{
 		Force1[i] = 0;
-	}*/
-	memset(Force1,0,sizeof(double)*NEQ);
-//*****************************************
-/*	m3=(1-Generalaparas->alpha1)/Generalaparas->beta1/pow(Generalaparas->h,2);
-	m5=Generalaparas->h*m3;
-	m6=m5*Generalaparas->h/2-1;*/
-//*****************************************
+	}
 	//cout<<Force1[1];
-/*	for (unsigned int fnum = 0; fnum < NEQ; fnum++)
-	{*/
+	for (unsigned int fnum = 0; fnum < NEQ; fnum++)
+	{
 	    for (unsigned int i = 0; i < N; i++)
 	   {
 		   for (unsigned int j = 0; j < N; j++)
@@ -454,23 +444,16 @@ bool CDomain::AssembleForceGE(unsigned int LoadCase, double ti)
 			   }
 		   }
 	   }
-//	}
+	}
 	K = GetDampingMatrix();
 	double* Force2;
 	Force2 = new double[NEQ];
-    ck=1-Generalaparas->delta;
-//*************************
-/*	m2=ck*Generalaparas->game/Generalaparas->beta1/Generalaparas->h;
-	m7=ck*Generalaparas->game/Generalaparas->beta1-1;
-	m8=ck*(Generalaparas->game/2/Generalaparas->beta1-1)*Generalaparas->h;*/
-//*************************
-/*	for (unsigned int i = 0; i < NEQ; i++)
+	for (unsigned int i = 0; i < NEQ; i++)
 	{
 		Force2[i] = 0;
-	}*/
-	memset(Force2,0,sizeof(double)*NEQ);
-/*	for (unsigned int fnum = 0; fnum < NEQ; fnum++)
-	{*/
+	}
+	for (unsigned int fnum = 0; fnum < NEQ; fnum++)
+	{
 	    for (unsigned int i = 0; i < N; i++)
 	   {
 		   for (unsigned int j = 0; j < N; j++)
@@ -487,20 +470,16 @@ bool CDomain::AssembleForceGE(unsigned int LoadCase, double ti)
 			   }
 		   }
 	   }
-//	}
+	}
 	K = GetStiffnessMatrix();
 	double* Force3;
 	Force3 = new double[NEQ];
-/*	for (unsigned int i = 0; i < NEQ; i++)
+	for (unsigned int i = 0; i < NEQ; i++)
 	{
 		Force3[i] = 0;
-	}*/
-    memset(Force3,0,sizeof(double)*NEQ);
-//********************************
-/*	m9=-Generalaparas->delta;*/
-//********************************
-/*	for (unsigned int fnum = 0; fnum < NEQ; fnum++)
-	{*/
+	}
+	for (unsigned int fnum = 0; fnum < NEQ; fnum++)
+	{
 	    for (unsigned int i = 0; i < N; i++)
 	   {
 		   for (unsigned int j = 0; j < N; j++)
@@ -517,7 +496,7 @@ bool CDomain::AssembleForceGE(unsigned int LoadCase, double ti)
 			   }
 		   }
 	   }
-//	}
+	}
 	for (unsigned int fnum = 0; fnum < NEQ; fnum++)
 	{
 		Force[fnum] +=(Force1[fnum] + Force2[fnum] + Force3[fnum]) ;
@@ -560,11 +539,10 @@ void CDomain::AllocateMatricesGE()
 	NEQGE = 6 * NEQ;
 	Force = new double[NEQGE];
     clear(Force, NEQGE);
-/*	for (unsigned int i = 0; i < NEQGE; i++)
+	for (unsigned int i = 0; i < NEQGE; i++)
 	{
 		Force[i] = 0;
-	}*/
-	memset(Force,0,sizeof(double)*NEQGE);
+	}
 
 //  Create the banded stiffness matrix
     StiffnessMatrix = new CSkylineMatrix<double>(NEQ);
@@ -577,15 +555,15 @@ void CDomain::AllocateMatricesGE()
 //	Calculate column heights
 	CalculateColumnHeights();
 
-	MassMatrix->CalculateDiagnoalAddress();
-
-	MassMatrix->Allocate();
 //	Calculate address of diagonal elements in banded matrix
 	StiffnessMatrix->CalculateDiagnoalAddress();
 
 //	Allocate for banded global stiffness matrix
     StiffnessMatrix->Allocate();
 
+	MassMatrix->CalculateDiagnoalAddress();
+
+	MassMatrix->Allocate();
 
 	DampingMatrix->CalculateDiagnoalAddress();
 

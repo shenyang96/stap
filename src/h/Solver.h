@@ -11,6 +11,7 @@
 #pragma once
 
 #include "SkylineMatrix.h"
+#include "Generalapara.h"
 
 //!	Base class for a solver
 /*	New solver should be derived from this base class, and match the storage scheme
@@ -40,4 +41,7 @@ public:
 
 //!	Reduce right-hand-side load vector and back substitute
 	void BackSubstitution(double* Force); 
+
+//!	Reduce right-hand-side load vector and back substitute
+	void BackSubstitutionGE(double* Force, CGeneralapara* Generalaparas); 
 };

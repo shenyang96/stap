@@ -12,6 +12,7 @@
 
 #include "Node.h"
 #include "Material.h"
+#include "Generalapara.h"
 
 using namespace std;
 
@@ -68,6 +69,15 @@ public:
 //!	Calculate element stiffness matrix (Upper triangular matrix, stored as an array column by colum)
 	virtual void ElementStiffness(double* stiffness) = 0; 
 
+//!	Calculate element mass matrix (Upper triangular matrix, stored as an array column by colum)
+	virtual void ElementMass(double* mass) = 0; 
+
+//!	Calculate element damping matrix (Upper triangular matrix, stored as an array column by colum)
+	virtual void ElementDamping(double* damping, double* damping1, double* damping2) = 0; 
+
+//!	Calculate element effectivestiffness matrix (Upper triangular matrix, stored as an array column by colum)
+	virtual void ElementEffstiffness(double* effstiffness, double* effstiffness1, double* effstiffness2, double* effstiffness3, CGeneralapara* Generalaparas) = 0; 
+
 //!	Calculate element stress 
 	virtual void ElementStress(double* stress, double* Displacement) = 0;
 
@@ -84,5 +94,12 @@ public:
     inline unsigned int GetND() { return ND_; }
 
 //!	Return the size of the element stiffness matrix (stored as an array column by column)
-	virtual unsigned int SizeOfStiffnessMatrix() = 0;     
+	virtual unsigned int SizeOfStiffnessMatrix() = 0;   
+
+//!	Return the size of the element mass matrix (stored as an array column by column)
+	virtual unsigned int SizeOfMassMatrix() = 0; 
+
+//!	Return the size of the element damping matrix (stored as an array column by column)
+	virtual unsigned int SizeOfDampingMatrix() = 0; 
+
 };

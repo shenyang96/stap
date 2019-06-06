@@ -16,55 +16,29 @@ using namespace std;
 
 //!	Material base class which only define one data member
 /*!	All type of material classes should be derived from this base class */
-class CMaterial
+class CGeneralapara
 {
 public:
 
-	unsigned int nset;	//!< Number of set
-	
-	double E;  //!< Young's modulus
+	double alpha1;  //¦Á
+	double delta;  //¦Ä
+	double yita;  //¦Ç
+	double yipusi;  //¦Å
+	double beta1;  //¦Â
+	double mu;  //¦Ì
+	double game;  //¦Ã
+	double h;  // Solution interval
+	double totaltime;//the total time of solution
 
 public:
 
 //! Virtual deconstructor
-    virtual ~CMaterial() {};
+    virtual ~CGeneralapara() {};
 
 //!	Read material data from stream Input
-	virtual bool Read(ifstream& Input, unsigned int mset) = 0;
+	virtual bool Read(ifstream& Input);
 
 //!	Write material data to Stream
-    virtual void Write(COutputter& output, unsigned int mset) = 0;
+    virtual void Write(COutputter& output);
 
-};
-
-//!	Material class for bar element
-class CBarMaterial : public CMaterial
-{
-public:
-
-	double Area;	//!< Sectional area of a bar element
-
-public:
-	
-//!	Read material data from stream Input
-	virtual bool Read(ifstream& Input, unsigned int mset);
-
-//!	Write material data to Stream
-	virtual void Write(COutputter& output, unsigned int mset);
-};
-
-//!	Material class for cube element
-class C3D20RMaterial : public CMaterial
-{
-public:
-
-	double nu, den, alpha, beta;	// Possion's ratio,the density of material,damping coffecient
-
-public:
-
-	//!	Read material data from stream Input
-	virtual bool Read(ifstream& Input, unsigned int mset);
-
-	//!	Write material data to Stream
-	virtual void Write(COutputter& output, unsigned int mset);
 };
