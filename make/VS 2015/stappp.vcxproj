@@ -151,6 +151,7 @@
     <ClCompile Include="..\..\src\cpp\Domain.cpp" />
     <ClCompile Include="..\..\src\cpp\ElementGroup.cpp" />
     <ClCompile Include="..\..\src\cpp\C3D20R.cpp" />
+    <ClCompile Include="..\..\src\cpp\Generalapara.cpp" />
     <ClCompile Include="..\..\src\cpp\LoadCaseData.cpp" />
     <ClCompile Include="..\..\src\cpp\main.cpp" />
     <ClCompile Include="..\..\src\cpp\Material.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="..\..\src\h\Element.h" />
     <ClInclude Include="..\..\src\h\ElementGroup.h" />
     <ClInclude Include="..\..\src\h\C3D20R.h" />
+    <ClInclude Include="..\..\src\h\Generalapara.h" />
     <ClInclude Include="..\..\src\h\LoadCaseData.h" />
     <ClInclude Include="..\..\src\h\Material.h" />
     <ClInclude Include="..\..\src\h\Node.h" />

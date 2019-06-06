@@ -48,6 +48,9 @@
     <ClCompile Include="..\..\src\cpp\C3D20R.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\cpp\Generalapara.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\h\Bar.h">
@@ -84,6 +87,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\h\C3D20R.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\h\Generalapara.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
