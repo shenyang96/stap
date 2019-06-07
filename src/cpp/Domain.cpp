@@ -392,6 +392,10 @@ bool CDomain::AssembleForceGE(unsigned int LoadCase, double ti)
 		}
 	}
 
+	for (unsigned int i = 0; i < NEQ; i++)
+	{
+		Force[NEQ + i] = 0;
+	}
 //	Loop over for all concentrated loads in load case LoadCase
 	for (unsigned int lnum = 0; lnum < LoadData->nloads; lnum++)
 	{
